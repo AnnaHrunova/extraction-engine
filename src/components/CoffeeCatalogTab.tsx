@@ -102,6 +102,11 @@ const CoffeeCard = ({
 
     <CupDiagram drink={drink} />
 
+    <div className="coffee-card__spotlight">
+      <span className="coffee-card__spotlight-label">Характер</span>
+      <strong>{drink.spotlightLine}</strong>
+    </div>
+
     <div className="ingredient-legend">
       {drink.layers.map((drinkLayer) => (
         <span key={`${drink.id}-legend-${drinkLayer.id}`} className="ingredient-legend__item">
@@ -165,6 +170,10 @@ const CoffeeModal = ({
           </div>
         </div>
         <div className="coffee-modal__content">
+          <div className="coffee-modal__block">
+            <strong>Что в этом напитке цепляет</strong>
+            <p className="coffee-modal__spotlight">{drink.spotlightLine}</p>
+          </div>
           <div className="coffee-modal__block">
             <strong>Как готовится</strong>
             <p>{drink.brewingMethod}</p>

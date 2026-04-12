@@ -231,6 +231,31 @@
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
 }
 
+.coffee-card__spotlight {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(248, 196, 113, 0.18), rgba(239, 131, 84, 0.08)),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(248, 196, 113, 0.22);
+  display: grid;
+  gap: 8px;
+}
+
+.coffee-card__spotlight-label {
+  color: #f8c471;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+
+.coffee-card__spotlight strong,
+.coffee-modal__spotlight {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  color: rgba(250, 245, 238, 0.98);
+}
+
 .coffee-card__header,
 .coffee-card__footer,
 .metric-scale__header,
@@ -437,6 +462,10 @@
 }
 
 .coffee-modal__block p {
+  margin: 0;
+}
+
+.coffee-modal__spotlight {
   margin: 0;
 }
 

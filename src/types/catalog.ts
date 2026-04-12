@@ -21,6 +21,7 @@ export interface CoffeeDrink {
   name: string;
   categoryId: CoffeeCategoryId;
   subtitle: string;
+  spotlightLine: string;
   volumeMl: number;
   baseLabel: string;
   tags: string[];
