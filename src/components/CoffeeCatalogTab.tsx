@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { catalogStats, coffeeCatalog, coffeeCategories, getDrinksByCategory } from "../catalog/coffeeCatalog";
 import type { CoffeeCategoryId, CoffeeDrink, CoffeeMetricId } from "../types/catalog";
+import { formatMl } from "../utils/format";
 import { Section } from "./Section";
 
 type CatalogFilterId = CoffeeCategoryId | "all";
@@ -12,6 +13,12 @@ const metricLabels: Record<CoffeeMetricId, string> = {
   sweetness: "Сладость",
   body: "Плотность",
 };
+
+const getLayerVolumeMl = (drink: CoffeeDrink, amountPercent: number): number =>
+  (drink.volumeMl * amountPercent) / 100;
+
+const formatLayerBreakdown = (drink: CoffeeDrink, amountPercent: number): string =>
+  `${amountPercent}% · ~${formatMl(getLayerVolumeMl(drink, amountPercent))}`;
 
 const CategoryTabs = ({
   activeFilter,
@@ -61,7 +68,7 @@ const CupDiagram = ({
             }}
           >
             {labelled ? (
-              <span>{`${drinkLayer.label} ${drinkLayer.amountPercent}%`}</span>
+              <span>{`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}</span>
             ) : null}
           </div>
         ))}
@@ -111,7 +118,7 @@ const CoffeeCard = ({
       {drink.layers.map((drinkLayer) => (
         <span key={`${drink.id}-legend-${drinkLayer.id}`} className="ingredient-legend__item">
           <i style={{ background: drinkLayer.color }} />
-          {`${drinkLayer.label} ${drinkLayer.amountPercent}%`}
+          {`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}
         </span>
       ))}
     </div>
@@ -164,7 +171,7 @@ const CoffeeModal = ({
             {drink.layers.map((drinkLayer) => (
               <span key={`${drink.id}-modal-${drinkLayer.id}`} className="ingredient-legend__item">
                 <i style={{ background: drinkLayer.color }} />
-                {`${drinkLayer.label} ${drinkLayer.amountPercent}%`}
+                {`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}
               </span>
             ))}
           </div>
