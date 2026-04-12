@@ -9,6 +9,13 @@ export interface CoffeeCategory {
   description: string;
 }
 
+export interface CoffeeGroup {
+  id: string;
+  categoryId: CoffeeCategoryId;
+  label: string;
+  description: string;
+}
+
 export interface CoffeeLayer {
   id: string;
   label: string;
@@ -20,6 +27,7 @@ export interface CoffeeDrink {
   id: string;
   name: string;
   categoryId: CoffeeCategoryId;
+  groupId: string;
   subtitle: string;
   spotlightLine: string;
   volumeMl: number;

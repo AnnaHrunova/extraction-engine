@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { catalogStats, coffeeCatalog, coffeeCategories, getDrinksByCategory } from "../catalog/coffeeCatalog";
+import {
+  catalogStats,
+  coffeeCatalog,
+  coffeeCategories,
+  getDrinksByCategory,
+  getGroupsByCategory,
+} from "../catalog/coffeeCatalog";
 import type { CoffeeCategoryId, CoffeeDrink, CoffeeMetricId } from "../types/catalog";
 import { formatMl } from "../utils/format";
 import { Section } from "./Section";
@@ -51,9 +57,11 @@ const CategoryTabs = ({
 const CupDiagram = ({
   drink,
   labelled = false,
+  showLayerAmounts = false,
 }: {
   drink: CoffeeDrink;
   labelled?: boolean;
+  showLayerAmounts?: boolean;
 }) => (
   <div className={`cup-diagram ${labelled ? "cup-diagram--labelled" : ""}`}>
     <div className="cup-diagram__glass">
@@ -69,6 +77,10 @@ const CupDiagram = ({
           >
             {labelled ? (
               <span>{`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}</span>
+            ) : showLayerAmounts ? (
+              <span className="cup-diagram__layer-amount">
+                {`~${formatMl(getLayerVolumeMl(drink, drinkLayer.amountPercent))}`}
+              </span>
             ) : null}
           </div>
         ))}
@@ -107,7 +119,7 @@ const CoffeeCard = ({
       <span className="badge">{`${drink.volumeMl} мл`}</span>
     </div>
 
-    <CupDiagram drink={drink} />
+    <CupDiagram drink={drink} showLayerAmounts />
 
     <div className="coffee-card__spotlight">
       <span className="coffee-card__spotlight-label">Характер</span>
@@ -296,12 +308,33 @@ export const CoffeeCatalogTab = () => {
           aside={<span className="badge">{`${getDrinksByCategory(category.id).length} напитков`}</span>}
         >
           <p className="muted-copy catalog-category__description">{category.description}</p>
-          <div className="coffee-grid">
-            {coffeeCatalog
-              .filter((drink) => drink.categoryId === category.id)
-              .map((drink) => (
-                <CoffeeCard key={drink.id} drink={drink} onOpen={setSelectedDrink} />
-              ))}
+          <div className="coffee-group-stack">
+            {getGroupsByCategory(category.id).map((group) => {
+              const groupDrinks = coffeeCatalog.filter(
+                (drink) => drink.categoryId === category.id && drink.groupId === group.id,
+              );
+
+              if (groupDrinks.length === 0) {
+                return null;
+              }
+
+              return (
+                <section key={group.id} className="coffee-group">
+                  <header className="coffee-group__header">
+                    <div>
+                      <h3>{group.label}</h3>
+                      <p>{group.description}</p>
+                    </div>
+                    <span className="badge">{`${groupDrinks.length} напитков`}</span>
+                  </header>
+                  <div className="coffee-grid">
+                    {groupDrinks.map((drink) => (
+                      <CoffeeCard key={drink.id} drink={drink} onOpen={setSelectedDrink} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
           </div>
         </Section>
       ))}
