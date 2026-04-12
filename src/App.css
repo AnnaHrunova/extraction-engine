@@ -84,6 +84,37 @@
   gap: 12px;
 }
 
+.tabs {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tabs__button {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  padding: 14px 18px;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.tabs__button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(248, 196, 113, 0.3);
+}
+
+.tabs__button--active {
+  background: rgba(248, 196, 113, 0.12);
+  border-color: rgba(248, 196, 113, 0.5);
+}
+
 .hero-stat,
 .stat-tile,
 .comparison-card,
@@ -146,6 +177,281 @@
 .profile-layout {
   display: grid;
   gap: 20px;
+}
+
+.catalog-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.catalog-intro__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.catalog-intro__copy {
+  display: grid;
+  gap: 10px;
+}
+
+.catalog-category__description {
+  margin: 0 0 18px;
+}
+
+.coffee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.coffee-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.02);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 16px;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.coffee-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(248, 196, 113, 0.35);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.coffee-card__header,
+.coffee-card__footer,
+.metric-scale__header,
+.coffee-modal__topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.coffee-card__header h3,
+.coffee-modal h3 {
+  margin: 0 0 4px;
+}
+
+.coffee-card__header p {
+  margin: 0;
+  color: rgba(236, 239, 244, 0.68);
+}
+
+.coffee-card__footer {
+  align-items: end;
+  color: rgba(236, 239, 244, 0.62);
+  font-size: 0.92rem;
+}
+
+.coffee-card__footer strong {
+  color: #f7d08a;
+}
+
+.cup-diagram {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 2px;
+}
+
+.cup-diagram__glass {
+  position: relative;
+  width: 112px;
+  height: 168px;
+}
+
+.cup-diagram__layers {
+  position: absolute;
+  inset: 0 14px 12px;
+  border: 3px solid rgba(255, 255, 255, 0.28);
+  border-top: 4px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px 16px 22px 22px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cup-diagram__layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(11, 15, 20, 0.8);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.cup-diagram--labelled .cup-diagram__glass {
+  width: 144px;
+  height: 216px;
+}
+
+.cup-diagram--labelled .cup-diagram__layer {
+  padding: 0 8px;
+  text-align: center;
+}
+
+.cup-diagram__handle {
+  position: absolute;
+  right: -4px;
+  top: 38px;
+  width: 26px;
+  height: 64px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-left: none;
+  border-radius: 0 18px 18px 0;
+}
+
+.cup-diagram__base {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 0;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.ingredient-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ingredient-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(236, 239, 244, 0.86);
+  font-size: 0.84rem;
+}
+
+.ingredient-legend__item i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.coffee-card__metrics,
+.coffee-card__metrics--modal {
+  display: grid;
+  gap: 10px;
+}
+
+.metric-scale {
+  display: grid;
+  gap: 6px;
+}
+
+.metric-scale__header span {
+  color: rgba(236, 239, 244, 0.65);
+  font-size: 0.85rem;
+}
+
+.metric-scale__track {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.metric-scale__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f8c471 0%, #ef8354 100%);
+}
+
+.coffee-modal__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(4, 7, 10, 0.72);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.coffee-modal {
+  width: min(1080px, 100%);
+  max-height: min(90vh, 920px);
+  overflow: auto;
+  padding: 24px;
+  position: relative;
+}
+
+.coffee-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.coffee-modal__layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+  gap: 24px;
+}
+
+.coffee-modal__visual,
+.coffee-modal__content {
+  display: grid;
+  gap: 16px;
+}
+
+.coffee-modal__block {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.coffee-modal__block strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.coffee-modal__block p {
+  margin: 0;
+}
+
+.coffee-steps {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: rgba(236, 239, 244, 0.78);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .control-block {
@@ -407,7 +713,9 @@
 
 @media (max-width: 1040px) {
   .hero,
-  .profile-layout {
+  .profile-layout,
+  .catalog-intro,
+  .coffee-modal__layout {
     grid-template-columns: 1fr;
   }
 }
@@ -427,11 +735,24 @@
   .section__header,
   .control__header,
   .profile-bar header,
-  .chart-card__header {
+  .chart-card__header,
+  .coffee-card__header,
+  .coffee-card__footer,
+  .metric-scale__header,
+  .coffee-modal__topline {
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .phase-strip__bar {
     flex-direction: column;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .coffee-modal {
+    padding: 18px;
   }
 }

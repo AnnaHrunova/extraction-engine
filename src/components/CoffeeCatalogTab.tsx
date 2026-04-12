@@ -1,0 +1,296 @@
+import { useEffect, useMemo, useState } from "react";
+import { catalogStats, coffeeCatalog, coffeeCategories, getDrinksByCategory } from "../catalog/coffeeCatalog";
+import type { CoffeeCategoryId, CoffeeDrink, CoffeeMetricId } from "../types/catalog";
+import { Section } from "./Section";
+
+type CatalogFilterId = CoffeeCategoryId | "all";
+
+const metricLabels: Record<CoffeeMetricId, string> = {
+  strength: "Крепость",
+  bitterness: "Горечь",
+  acidity: "Кислотность",
+  sweetness: "Сладость",
+  body: "Плотность",
+};
+
+const CategoryTabs = ({
+  activeFilter,
+  onChange,
+}: {
+  activeFilter: CatalogFilterId;
+  onChange: (next: CatalogFilterId) => void;
+}) => (
+  <div className="segmented segmented--catalog">
+    <button
+      type="button"
+      className={activeFilter === "all" ? "is-active" : undefined}
+      onClick={() => onChange("all")}
+    >
+      Все категории
+    </button>
+    {coffeeCategories.map((category) => (
+      <button
+        key={category.id}
+        type="button"
+        className={activeFilter === category.id ? "is-active" : undefined}
+        onClick={() => onChange(category.id)}
+      >
+        {`${category.order}. ${category.shortLabel}`}
+      </button>
+    ))}
+  </div>
+);
+
+const CupDiagram = ({
+  drink,
+  labelled = false,
+}: {
+  drink: CoffeeDrink;
+  labelled?: boolean;
+}) => (
+  <div className={`cup-diagram ${labelled ? "cup-diagram--labelled" : ""}`}>
+    <div className="cup-diagram__glass">
+      <div className="cup-diagram__layers">
+        {drink.layers.map((drinkLayer) => (
+          <div
+            key={`${drink.id}-${drinkLayer.id}`}
+            className="cup-diagram__layer"
+            style={{
+              height: `${drinkLayer.amountPercent}%`,
+              background: drinkLayer.color,
+            }}
+          >
+            {labelled ? (
+              <span>{`${drinkLayer.label} ${drinkLayer.amountPercent}%`}</span>
+            ) : null}
+          </div>
+        ))}
+      </div>
+      <div className="cup-diagram__handle" />
+      <div className="cup-diagram__base" />
+    </div>
+  </div>
+);
+
+const MetricScale = ({ label, value }: { label: string; value: number }) => (
+  <div className="metric-scale">
+    <div className="metric-scale__header">
+      <span>{label}</span>
+      <strong>{`${value}/5`}</strong>
+    </div>
+    <div className="metric-scale__track">
+      <div className="metric-scale__fill" style={{ width: `${(value / 5) * 100}%` }} />
+    </div>
+  </div>
+);
+
+const CoffeeCard = ({
+  drink,
+  onOpen,
+}: {
+  drink: CoffeeDrink;
+  onOpen: (drink: CoffeeDrink) => void;
+}) => (
+  <button type="button" className="coffee-card" onClick={() => onOpen(drink)}>
+    <div className="coffee-card__header">
+      <div>
+        <h3>{drink.name}</h3>
+        <p>{drink.subtitle}</p>
+      </div>
+      <span className="badge">{`${drink.volumeMl} мл`}</span>
+    </div>
+
+    <CupDiagram drink={drink} />
+
+    <div className="ingredient-legend">
+      {drink.layers.map((drinkLayer) => (
+        <span key={`${drink.id}-legend-${drinkLayer.id}`} className="ingredient-legend__item">
+          <i style={{ background: drinkLayer.color }} />
+          {`${drinkLayer.label} ${drinkLayer.amountPercent}%`}
+        </span>
+      ))}
+    </div>
+
+    <div className="coffee-card__metrics">
+      {(Object.keys(metricLabels) as CoffeeMetricId[]).map((metricId) => (
+        <MetricScale
+          key={`${drink.id}-${metricId}`}
+          label={metricLabels[metricId]}
+          value={drink.metrics[metricId]}
+        />
+      ))}
+    </div>
+
+    <div className="coffee-card__footer">
+      <span>{drink.baseLabel}</span>
+      <strong>Нажмите, чтобы открыть рецепт</strong>
+    </div>
+  </button>
+);
+
+const CoffeeModal = ({
+  drink,
+  onClose,
+}: {
+  drink: CoffeeDrink;
+  onClose: () => void;
+}) => (
+  <div className="coffee-modal__overlay" onClick={onClose} role="presentation">
+    <div
+      className="coffee-modal panel"
+      onClick={(event) => event.stopPropagation()}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`coffee-modal-title-${drink.id}`}
+    >
+      <button type="button" className="coffee-modal__close" onClick={onClose} aria-label="Закрыть">
+        ×
+      </button>
+      <div className="coffee-modal__layout">
+        <div className="coffee-modal__visual">
+          <div className="coffee-modal__topline">
+            <span className="section__eyebrow">{drink.baseLabel}</span>
+            <span className="badge">{`${drink.volumeMl} мл`}</span>
+          </div>
+          <h3 id={`coffee-modal-title-${drink.id}`}>{drink.name}</h3>
+          <p className="muted-copy">{drink.description}</p>
+          <CupDiagram drink={drink} labelled />
+          <div className="ingredient-legend ingredient-legend--modal">
+            {drink.layers.map((drinkLayer) => (
+              <span key={`${drink.id}-modal-${drinkLayer.id}`} className="ingredient-legend__item">
+                <i style={{ background: drinkLayer.color }} />
+                {`${drinkLayer.label} ${drinkLayer.amountPercent}%`}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="coffee-modal__content">
+          <div className="coffee-modal__block">
+            <strong>Как готовится</strong>
+            <p>{drink.brewingMethod}</p>
+          </div>
+          <div className="coffee-modal__block">
+            <strong>Способ приготовления</strong>
+            <ol className="coffee-steps">
+              {drink.preparationSteps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </div>
+          <div className="coffee-modal__block">
+            <strong>Сенсорный профиль</strong>
+            <div className="coffee-card__metrics coffee-card__metrics--modal">
+              {(Object.keys(metricLabels) as CoffeeMetricId[]).map((metricId) => (
+                <MetricScale
+                  key={`${drink.id}-modal-${metricId}`}
+                  label={metricLabels[metricId]}
+                  value={drink.metrics[metricId]}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="coffee-modal__block">
+            <strong>Когда это уместно</strong>
+            <p>{drink.servingNote}</p>
+          </div>
+          <div className="tag-list">
+            {drink.tags.map((tag) => (
+              <span key={tag} className="badge">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export const CoffeeCatalogTab = () => {
+  const [activeFilter, setActiveFilter] = useState<CatalogFilterId>("all");
+  const [selectedDrink, setSelectedDrink] = useState<CoffeeDrink | null>(null);
+
+  useEffect(() => {
+    if (!selectedDrink) {
+      return undefined;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedDrink(null);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [selectedDrink]);
+
+  const visibleCategories = useMemo(
+    () =>
+      activeFilter === "all"
+        ? coffeeCategories
+        : coffeeCategories.filter((category) => category.id === activeFilter),
+    [activeFilter],
+  );
+
+  return (
+    <>
+      <Section
+        title="Карта кофейных напитков"
+        eyebrow="Первый таб"
+        aside={<span className="badge badge--accent">Без сиропов и прочей липкой ереси</span>}
+      >
+        <div className="catalog-intro">
+          <div className="catalog-intro__stats">
+            <article className="hero-stat">
+              <span>Категории</span>
+              <strong>{catalogStats.categoryCount}</strong>
+            </article>
+            <article className="hero-stat">
+              <span>Напитки</span>
+              <strong>{catalogStats.drinkCount}</strong>
+            </article>
+            <article className="hero-stat">
+              <span>Как читать</span>
+              <strong>Нажмите на чашку</strong>
+            </article>
+          </div>
+          <div className="catalog-intro__copy">
+            <p className="muted-copy">
+              Здесь собраны основные кофейные напитки по трём группам: чёрные, молочные и с
+              добавками. У каждой карточки показан разрез чашки, примерные пропорции и сенсорный
+              профиль по пяти шкалам.
+            </p>
+            <p className="muted-copy">
+              Для наглядности я добавил не только базовые позиции вроде эспрессо и капучино, но и
+              нормальные классические вариации: V60, аэропресс, кортадо, бамбл, кафе бомбон,
+              бичерин и прочее, но без сиропного цирка.
+            </p>
+          </div>
+        </div>
+
+        <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+      </Section>
+
+      {visibleCategories.map((category) => (
+        <Section
+          key={category.id}
+          title={`${category.order}. ${category.label}`}
+          eyebrow="Категория"
+          aside={<span className="badge">{`${getDrinksByCategory(category.id).length} напитков`}</span>}
+        >
+          <p className="muted-copy catalog-category__description">{category.description}</p>
+          <div className="coffee-grid">
+            {coffeeCatalog
+              .filter((drink) => drink.categoryId === category.id)
+              .map((drink) => (
+                <CoffeeCard key={drink.id} drink={drink} onOpen={setSelectedDrink} />
+              ))}
+          </div>
+        </Section>
+      ))}
+
+      {selectedDrink ? <CoffeeModal drink={selectedDrink} onClose={() => setSelectedDrink(null)} /> : null}
+    </>
+  );
+};
