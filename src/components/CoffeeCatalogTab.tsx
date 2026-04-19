@@ -21,6 +21,7 @@ const metricLabels: Record<CoffeeMetricId, string> = {
 };
 
 const REFERENCE_CUP_VOLUME_ML = 300;
+const ESPRESSO_CUP_MAX_VOLUME_ML = 70;
 
 const getLayerVolumeMl = (drink: CoffeeDrink, amountPercent: number): number =>
   (drink.volumeMl * amountPercent) / 100;
@@ -67,6 +68,7 @@ const CupDiagram = ({
 }) => (
   (() => {
     const fillPercent = Math.min((drink.volumeMl / REFERENCE_CUP_VOLUME_ML) * 100, 100);
+    const isEspressoCup = drink.volumeMl <= ESPRESSO_CUP_MAX_VOLUME_ML;
     const renderedLayers = drink.layers.map((drinkLayer) => {
       const layerFillPercent = (fillPercent * drinkLayer.amountPercent) / 100;
 
@@ -79,7 +81,15 @@ const CupDiagram = ({
     const fillMarkerPercent = Math.min(92, Math.max(fillPercent, 8));
 
     return (
-      <div className={`cup-diagram ${labelled ? "cup-diagram--labelled" : ""}`}>
+      <div
+        className={[
+          "cup-diagram",
+          labelled ? "cup-diagram--labelled" : "",
+          isEspressoCup ? "cup-diagram--espresso" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div className="cup-diagram__meta">
           <span className="cup-diagram__capacity-tag">{`Эталон чашки: ${REFERENCE_CUP_VOLUME_ML} мл`}</span>
         </div>

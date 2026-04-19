@@ -431,6 +431,54 @@
   line-height: 1;
 }
 
+.cup-diagram--espresso .cup-diagram__glass {
+  width: 94px;
+  height: 122px;
+}
+
+.cup-diagram--espresso .cup-diagram__layers {
+  inset: 5px 8px 14px;
+  border-top-width: 4px;
+  border-radius: 20px 20px 24px 24px;
+}
+
+.cup-diagram--espresso .cup-diagram__fill-tag {
+  padding: 4px 7px;
+  font-size: 0.62rem;
+}
+
+.cup-diagram--espresso .cup-diagram__scale {
+  padding: 5px 0 8px;
+  font-size: 0.64rem;
+}
+
+.cup-diagram--espresso .cup-diagram__capacity-tag {
+  font-size: 0.66rem;
+}
+
+.cup-diagram--espresso .cup-diagram__layer-amount {
+  font-size: 0.58rem;
+}
+
+.cup-diagram--espresso .cup-diagram__handle {
+  top: 26px;
+  width: 24px;
+  height: 50px;
+  border-width: 4px;
+  border-radius: 0 20px 20px 0;
+}
+
+.cup-diagram--espresso .cup-diagram__base {
+  left: 14px;
+  right: 14px;
+  height: 7px;
+}
+
+.cup-diagram--espresso.cup-diagram--labelled .cup-diagram__glass {
+  width: 118px;
+  height: 152px;
+}
+
 .cup-diagram__handle {
   position: absolute;
   right: 2px;
