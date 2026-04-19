@@ -20,6 +20,8 @@ const metricLabels: Record<CoffeeMetricId, string> = {
   body: "Плотность",
 };
 
+const REFERENCE_CUP_VOLUME_ML = 300;
+
 const getLayerVolumeMl = (drink: CoffeeDrink, amountPercent: number): number =>
   (drink.volumeMl * amountPercent) / 100;
 
@@ -63,32 +65,60 @@ const CupDiagram = ({
   labelled?: boolean;
   showLayerAmounts?: boolean;
 }) => (
-  <div className={`cup-diagram ${labelled ? "cup-diagram--labelled" : ""}`}>
-    <div className="cup-diagram__glass">
-      <div className="cup-diagram__layers">
-        {drink.layers.map((drinkLayer) => (
-          <div
-            key={`${drink.id}-${drinkLayer.id}`}
-            className="cup-diagram__layer"
-            style={{
-              height: `${drinkLayer.amountPercent}%`,
-              background: drinkLayer.color,
-            }}
-          >
-            {labelled ? (
-              <span>{`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}</span>
-            ) : showLayerAmounts ? (
-              <span className="cup-diagram__layer-amount">
-                {`~${formatMl(getLayerVolumeMl(drink, drinkLayer.amountPercent))}`}
-              </span>
-            ) : null}
+  (() => {
+    const fillPercent = Math.min((drink.volumeMl / REFERENCE_CUP_VOLUME_ML) * 100, 100);
+    const renderedLayers = drink.layers.map((drinkLayer) => {
+      const layerFillPercent = (fillPercent * drinkLayer.amountPercent) / 100;
+
+      return {
+        ...drinkLayer,
+        layerFillPercent,
+        layerVolumeMl: getLayerVolumeMl(drink, drinkLayer.amountPercent),
+      };
+    });
+    const fillMarkerPercent = Math.min(92, Math.max(fillPercent, 8));
+
+    return (
+      <div className={`cup-diagram ${labelled ? "cup-diagram--labelled" : ""}`}>
+        <div className="cup-diagram__meta">
+          <span className="cup-diagram__capacity-tag">{`Эталон чашки: ${REFERENCE_CUP_VOLUME_ML} мл`}</span>
+        </div>
+        <div className="cup-diagram__visual">
+          <div className="cup-diagram__glass">
+            <div className="cup-diagram__layers">
+              <div className="cup-diagram__empty" style={{ height: `${100 - fillPercent}%` }} />
+              {renderedLayers.map((drinkLayer) => (
+                <div
+                  key={`${drink.id}-${drinkLayer.id}`}
+                  className="cup-diagram__layer"
+                  style={{
+                    height: `${drinkLayer.layerFillPercent}%`,
+                    background: drinkLayer.color,
+                  }}
+                >
+                  {labelled && drinkLayer.layerFillPercent >= 14 ? (
+                    <span>{`${drinkLayer.label} ${formatLayerBreakdown(drink, drinkLayer.amountPercent)}`}</span>
+                  ) : showLayerAmounts && drinkLayer.layerFillPercent >= 10 ? (
+                    <span className="cup-diagram__layer-amount">{`~${formatMl(drinkLayer.layerVolumeMl)}`}</span>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+            <span className="cup-diagram__fill-tag" style={{ bottom: `${fillMarkerPercent}%` }}>
+              {formatMl(drink.volumeMl)}
+            </span>
+            <div className="cup-diagram__handle" />
+            <div className="cup-diagram__base" />
           </div>
-        ))}
+          <div className="cup-diagram__scale" aria-hidden="true">
+            <span>{`${REFERENCE_CUP_VOLUME_ML} мл`}</span>
+            <span>{`${REFERENCE_CUP_VOLUME_ML / 2} мл`}</span>
+            <span>0 мл</span>
+          </div>
+        </div>
       </div>
-      <div className="cup-diagram__handle" />
-      <div className="cup-diagram__base" />
-    </div>
-  </div>
+    );
+  })()
 );
 
 const MetricScale = ({ label, value }: { label: string; value: number }) => (
@@ -286,8 +316,8 @@ export const CoffeeCatalogTab = () => {
           <div className="catalog-intro__copy">
             <p className="muted-copy">
               Здесь собраны основные кофейные напитки по трём группам: чёрные, молочные и с
-              добавками. У каждой карточки показан разрез чашки, примерные пропорции и сенсорный
-              профиль по пяти шкалам.
+              добавками. У каждой карточки показан разрез чашки относительно общей шкалы 300 мл,
+              примерные пропорции и сенсорный профиль по пяти шкалам.
             </p>
             <p className="muted-copy">
               Для наглядности я добавил не только базовые позиции вроде эспрессо и капучино, но и
