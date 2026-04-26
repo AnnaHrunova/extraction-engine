@@ -318,6 +318,10 @@
 }
 
 .cup-diagram {
+  --cup-emoji-glow: rgba(248, 196, 113, 0.24);
+  --cup-emoji-edge: rgba(248, 196, 113, 0.42);
+  --cup-emoji-sheen: rgba(255, 255, 255, 0.18);
+  --cup-emoji-core: rgba(23, 30, 40, 0.9);
   display: grid;
   justify-items: center;
   gap: 8px;
@@ -366,6 +370,7 @@
   box-shadow:
     inset 0 -10px 22px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  z-index: 1;
 }
 
 .cup-diagram__empty {
@@ -392,6 +397,61 @@
   font-weight: 800;
   line-height: 1;
   padding: 0 2px;
+}
+
+.cup-diagram__ornaments {
+  position: absolute;
+  inset: -14px -10px -6px -10px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cup-diagram__emoji {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.26));
+  user-select: none;
+}
+
+.cup-diagram__emoji--steam {
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  opacity: 0.92;
+  animation: cup-steam-drift 3.6s ease-in-out infinite;
+}
+
+.cup-diagram__emoji--badge,
+.cup-diagram__emoji--accent {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 28% 22%, var(--cup-emoji-sheen), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 44%),
+    var(--cup-emoji-core);
+  border: 1px solid var(--cup-emoji-edge);
+  font-size: 1rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 18px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 22px var(--cup-emoji-glow);
+  backdrop-filter: blur(10px);
+}
+
+.cup-diagram__emoji--badge {
+  left: -6px;
+  bottom: 10px;
+  animation: cup-badge-float 4.6s ease-in-out infinite;
+}
+
+.cup-diagram__emoji--accent {
+  right: -8px;
+  top: 22px;
+  animation: cup-accent-twinkle 4.8s ease-in-out infinite;
 }
 
 .cup-diagram__fill-tag {
@@ -431,6 +491,41 @@
   line-height: 1;
 }
 
+.cup-diagram--theme-bronze {
+  --cup-emoji-glow: rgba(248, 196, 113, 0.28);
+  --cup-emoji-edge: rgba(248, 196, 113, 0.42);
+  --cup-emoji-sheen: rgba(255, 247, 226, 0.2);
+  --cup-emoji-core: linear-gradient(180deg, rgba(101, 68, 39, 0.94), rgba(31, 23, 18, 0.94));
+}
+
+.cup-diagram--theme-cream {
+  --cup-emoji-glow: rgba(255, 244, 214, 0.24);
+  --cup-emoji-edge: rgba(245, 222, 179, 0.46);
+  --cup-emoji-sheen: rgba(255, 255, 255, 0.28);
+  --cup-emoji-core: linear-gradient(180deg, rgba(89, 75, 61, 0.92), rgba(33, 28, 25, 0.94));
+}
+
+.cup-diagram--theme-cocoa {
+  --cup-emoji-glow: rgba(183, 122, 84, 0.28);
+  --cup-emoji-edge: rgba(190, 132, 95, 0.4);
+  --cup-emoji-sheen: rgba(255, 241, 229, 0.18);
+  --cup-emoji-core: linear-gradient(180deg, rgba(88, 47, 37, 0.94), rgba(29, 17, 14, 0.96));
+}
+
+.cup-diagram--theme-citrus {
+  --cup-emoji-glow: rgba(243, 156, 61, 0.3);
+  --cup-emoji-edge: rgba(245, 177, 91, 0.48);
+  --cup-emoji-sheen: rgba(255, 247, 229, 0.22);
+  --cup-emoji-core: linear-gradient(180deg, rgba(98, 63, 22, 0.94), rgba(33, 23, 13, 0.96));
+}
+
+.cup-diagram--theme-graphite {
+  --cup-emoji-glow: rgba(143, 170, 196, 0.22);
+  --cup-emoji-edge: rgba(166, 193, 216, 0.34);
+  --cup-emoji-sheen: rgba(244, 249, 255, 0.16);
+  --cup-emoji-core: linear-gradient(180deg, rgba(47, 58, 70, 0.94), rgba(20, 26, 34, 0.96));
+}
+
 .cup-diagram--espresso .cup-diagram__glass {
   width: 94px;
   height: 122px;
@@ -445,6 +540,31 @@
 .cup-diagram--espresso .cup-diagram__fill-tag {
   padding: 4px 7px;
   font-size: 0.62rem;
+}
+
+.cup-diagram--espresso .cup-diagram__ornaments {
+  inset: -12px -8px -4px -8px;
+}
+
+.cup-diagram--espresso .cup-diagram__emoji--steam {
+  font-size: 0.88rem;
+}
+
+.cup-diagram--espresso .cup-diagram__emoji--badge,
+.cup-diagram--espresso .cup-diagram__emoji--accent {
+  width: 24px;
+  height: 24px;
+  font-size: 0.84rem;
+}
+
+.cup-diagram--espresso .cup-diagram__emoji--badge {
+  left: -4px;
+  bottom: 8px;
+}
+
+.cup-diagram--espresso .cup-diagram__emoji--accent {
+  right: -6px;
+  top: 18px;
 }
 
 .cup-diagram--espresso .cup-diagram__scale {
@@ -477,6 +597,66 @@
 .cup-diagram--espresso.cup-diagram--labelled .cup-diagram__glass {
   width: 118px;
   height: 152px;
+}
+
+.cup-diagram--labelled .cup-diagram__emoji--badge,
+.cup-diagram--labelled .cup-diagram__emoji--accent {
+  width: 34px;
+  height: 34px;
+  font-size: 1.08rem;
+}
+
+.cup-diagram--labelled .cup-diagram__emoji--steam {
+  font-size: 1.08rem;
+}
+
+@keyframes cup-steam-drift {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(0.96);
+    opacity: 0.72;
+  }
+
+  50% {
+    transform: translateX(calc(-50% + 2px)) translateY(-3px) scale(1.04);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(calc(-50% - 2px)) translateY(0) scale(0.98);
+    opacity: 0.78;
+  }
+}
+
+@keyframes cup-badge-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(-1deg);
+  }
+}
+
+@keyframes cup-accent-twinkle {
+  0%,
+  100% {
+    transform: translateY(0) scale(0.96) rotate(6deg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 10px 18px rgba(0, 0, 0, 0.24),
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 0 18px var(--cup-emoji-glow);
+  }
+
+  50% {
+    transform: translateY(-2px) scale(1.04) rotate(0deg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 12px 20px rgba(0, 0, 0, 0.24),
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 26px var(--cup-emoji-glow);
+  }
 }
 
 .cup-diagram__handle {
