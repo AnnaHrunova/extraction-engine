@@ -414,15 +414,6 @@
   user-select: none;
 }
 
-.cup-diagram__emoji--steam {
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1rem;
-  opacity: 0.92;
-  animation: cup-steam-drift 3.6s ease-in-out infinite;
-}
-
 .cup-diagram__emoji--badge,
 .cup-diagram__emoji--accent {
   width: 30px;
@@ -546,10 +537,6 @@
   inset: -12px -8px -4px -8px;
 }
 
-.cup-diagram--espresso .cup-diagram__emoji--steam {
-  font-size: 0.88rem;
-}
-
 .cup-diagram--espresso .cup-diagram__emoji--badge,
 .cup-diagram--espresso .cup-diagram__emoji--accent {
   width: 24px;
@@ -604,27 +591,6 @@
   width: 34px;
   height: 34px;
   font-size: 1.08rem;
-}
-
-.cup-diagram--labelled .cup-diagram__emoji--steam {
-  font-size: 1.08rem;
-}
-
-@keyframes cup-steam-drift {
-  0% {
-    transform: translateX(-50%) translateY(0) scale(0.96);
-    opacity: 0.72;
-  }
-
-  50% {
-    transform: translateX(calc(-50% + 2px)) translateY(-3px) scale(1.04);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateX(calc(-50% - 2px)) translateY(0) scale(0.98);
-    opacity: 0.78;
-  }
 }
 
 @keyframes cup-badge-float {

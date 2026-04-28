@@ -26,7 +26,6 @@ const ESPRESSO_CUP_MAX_VOLUME_ML = 70;
 type CupEmojiTheme = "bronze" | "cream" | "cocoa" | "citrus" | "graphite";
 
 type CupEmojiSet = {
-  steam: string;
   badge: string;
   accent: string;
   theme: CupEmojiTheme;
@@ -39,36 +38,36 @@ const formatLayerBreakdown = (drink: CoffeeDrink, amountPercent: number): string
   `${amountPercent}% · ~${formatMl(getLayerVolumeMl(drink, amountPercent))}`;
 
 const cupEmojiByDrinkId: Record<string, CupEmojiSet> = {
-  espresso: { steam: "♨️", badge: "☕", accent: "✦", theme: "bronze" },
-  ristretto: { steam: "♨️", badge: "⚡", accent: "☕", theme: "bronze" },
-  lungo: { steam: "♨️", badge: "🫘", accent: "☕", theme: "bronze" },
-  americano: { steam: "♨️", badge: "💧", accent: "☕", theme: "graphite" },
-  "filter-coffee": { steam: "♨️", badge: "🫗", accent: "✦", theme: "graphite" },
-  v60: { steam: "♨️", badge: "💠", accent: "🫗", theme: "graphite" },
-  aeropress: { steam: "♨️", badge: "🧪", accent: "☕", theme: "graphite" },
-  turkish: { steam: "♨️", badge: "🌙", accent: "☕", theme: "bronze" },
-  cappuccino: { steam: "♨️", badge: "🥛", accent: "☁️", theme: "cream" },
-  "flat-white": { steam: "♨️", badge: "🥛", accent: "✦", theme: "cream" },
-  latte: { steam: "♨️", badge: "🥛", accent: "🤍", theme: "cream" },
-  cortado: { steam: "♨️", badge: "⚖️", accent: "🥛", theme: "cream" },
-  macchiato: { steam: "♨️", badge: "🥛", accent: "☕", theme: "cream" },
-  "latte-macchiato": { steam: "♨️", badge: "🥛", accent: "✨", theme: "cream" },
-  piccolo: { steam: "♨️", badge: "🥛", accent: "⚡", theme: "cream" },
-  mocha: { steam: "♨️", badge: "🍫", accent: "🥛", theme: "cocoa" },
-  viennese: { steam: "♨️", badge: "☁️", accent: "🍫", theme: "cream" },
-  marocchino: { steam: "♨️", badge: "🍫", accent: "☁️", theme: "cocoa" },
-  "cafe-bombon": { steam: "♨️", badge: "🍮", accent: "🥛", theme: "cream" },
-  bicerin: { steam: "♨️", badge: "🍫", accent: "☁️", theme: "cocoa" },
-  bumble: { steam: "♨️", badge: "🍊", accent: "✨", theme: "citrus" },
+  espresso: { badge: "☕", accent: "✦", theme: "bronze" },
+  ristretto: { badge: "⚡", accent: "☕", theme: "bronze" },
+  lungo: { badge: "🫘", accent: "☕", theme: "bronze" },
+  americano: { badge: "💧", accent: "☕", theme: "graphite" },
+  "filter-coffee": { badge: "🫗", accent: "✦", theme: "graphite" },
+  v60: { badge: "💠", accent: "🫗", theme: "graphite" },
+  aeropress: { badge: "🧪", accent: "☕", theme: "graphite" },
+  turkish: { badge: "🌙", accent: "☕", theme: "bronze" },
+  cappuccino: { badge: "🥛", accent: "☁️", theme: "cream" },
+  "flat-white": { badge: "🥛", accent: "✦", theme: "cream" },
+  latte: { badge: "🥛", accent: "🤍", theme: "cream" },
+  cortado: { badge: "⚖️", accent: "🥛", theme: "cream" },
+  macchiato: { badge: "🥛", accent: "☕", theme: "cream" },
+  "latte-macchiato": { badge: "🥛", accent: "✨", theme: "cream" },
+  piccolo: { badge: "🥛", accent: "⚡", theme: "cream" },
+  mocha: { badge: "🍫", accent: "🥛", theme: "cocoa" },
+  viennese: { badge: "☁️", accent: "🍫", theme: "cream" },
+  marocchino: { badge: "🍫", accent: "☁️", theme: "cocoa" },
+  "cafe-bombon": { badge: "🍮", accent: "🥛", theme: "cream" },
+  bicerin: { badge: "🍫", accent: "☁️", theme: "cocoa" },
+  bumble: { badge: "🍊", accent: "✨", theme: "citrus" },
 };
 
 const getCupEmojis = (drink: CoffeeDrink): CupEmojiSet =>
   cupEmojiByDrinkId[drink.id] ??
   (drink.categoryId === "milk"
-    ? { steam: "♨️", badge: "🥛", accent: "☕", theme: "cream" }
+    ? { badge: "🥛", accent: "☕", theme: "cream" }
     : drink.categoryId === "extras"
-      ? { steam: "♨️", badge: "✨", accent: "☕", theme: "cocoa" }
-      : { steam: "♨️", badge: "☕", accent: "✦", theme: "bronze" });
+      ? { badge: "✨", accent: "☕", theme: "cocoa" }
+      : { badge: "☕", accent: "✦", theme: "bronze" });
 
 const CategoryTabs = ({
   activeFilter,
@@ -158,7 +157,6 @@ const CupDiagram = ({
               ))}
             </div>
             <div className="cup-diagram__ornaments" aria-hidden="true">
-              <span className="cup-diagram__emoji cup-diagram__emoji--steam">{cupEmojis.steam}</span>
               <span className="cup-diagram__emoji cup-diagram__emoji--badge">{cupEmojis.badge}</span>
               <span className="cup-diagram__emoji cup-diagram__emoji--accent">{cupEmojis.accent}</span>
             </div>
